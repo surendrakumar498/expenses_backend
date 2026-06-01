@@ -1,17 +1,27 @@
 import Expense from "../models/Expense.js";
 
-
-
 // CREATE EXPENSE
 export const createExpense = async (req, res) => {
-
   try {
 
     const { type, amount, time, date } = req.body;
 
-    const file = req.file
-      ? req.file.filename
-      : "";
+    // VALIDATION
+
+    if (
+      !type ||
+      !amount ||
+      !time ||
+      !date ||
+      !req.file
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    const file = req.file.filename;
 
     const expense = await Expense.create({
       type,
@@ -23,7 +33,7 @@ export const createExpense = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Expense Added",
+      message: "Expense Added Successfully",
       data: expense,
     });
 
@@ -35,14 +45,11 @@ export const createExpense = async (req, res) => {
     });
 
   }
-
 };
-
 
 
 // GET ALL EXPENSES
 export const getExpenses = async (req, res) => {
-
   try {
 
     const expenses = await Expense.find().sort({
@@ -62,15 +69,21 @@ export const getExpenses = async (req, res) => {
     });
 
   }
-
 };
 
-// delete expenses 
-export const deleteExpense = async (req, res) => {
 
+// DELETE EXPENSE
+export const deleteExpense = async (req, res) => {
   try {
 
     const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Expense ID is required",
+      });
+    }
 
     await Expense.findByIdAndDelete(id);
 
@@ -87,6 +100,4 @@ export const deleteExpense = async (req, res) => {
     });
 
   }
-
 };
-

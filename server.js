@@ -20,7 +20,6 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static Folder
 app.use("/uploads", express.static("uploads"));
 
 // Test Route
@@ -52,5 +51,7 @@ if (process.env.NODE_ENV !== "production") {
     console.log(`Server running on ${PORT}`);
   });
 }
+
+
 
 export default app;
