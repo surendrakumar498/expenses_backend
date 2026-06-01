@@ -52,5 +52,21 @@ if (process.env.NODE_ENV !== "production") {
     console.log(`Server running on ${PORT}`);
   });
 }
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("✅ MongoDB Connected");
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB Error:", err);
+  });
+
+app.get("/db-status", (req, res) => {
+  res.json({
+    readyState: mongoose.connection.readyState,
+    hasMongoUri: !!process.env.MONGO_URI,
+    dbName: mongoose.connection.name,
+  });
+});
 
 export default app;
