@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 
-// ================= MULTER STORAGE =================
+//  MULTER STORAGE 
 
 const storage = multer.diskStorage({
 
@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 
-// ================= CREATE =================
+// CREATE 
 
 router.post(
   "/create",
@@ -41,16 +41,11 @@ router.post(
   createExpense
 );
 
-
-// ================= GET ALL =================
-
 router.get(
   "/all",
   getExpenses
 );
 
-
-// ================= DELETE =================
 
 router.delete(
   "/delete/:id",
@@ -58,7 +53,7 @@ router.delete(
 );
 
 
-// ================= DOWNLOAD FILE =================
+// DOWNLOAD FILE
 
 router.get(
   "/download/:filename",
