@@ -1,12 +1,10 @@
 import Expense from "../models/Expense.js";
 
 // CREATE EXPENSE
+
 export const createExpense = async (req, res) => {
   try {
-
     const { type, amount, time, date } = req.body;
-
-    // VALIDATION
 
     if (
       !type ||
@@ -21,14 +19,12 @@ export const createExpense = async (req, res) => {
       });
     }
 
-    const file = req.file.filename;
-
     const expense = await Expense.create({
       type,
       amount,
       time,
       date,
-      file,
+      file: req.file.path, // Cloudinary URL
     });
 
     res.status(201).json({
@@ -38,20 +34,19 @@ export const createExpense = async (req, res) => {
     });
 
   } catch (error) {
+    console.log(error);
 
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 
+// GET ALL
 
-// GET ALL EXPENSES
 export const getExpenses = async (req, res) => {
   try {
-
     const expenses = await Expense.find().sort({
       createdAt: -1,
     });
@@ -62,28 +57,18 @@ export const getExpenses = async (req, res) => {
     });
 
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 
+// DELETE
 
-// DELETE EXPENSE
 export const deleteExpense = async (req, res) => {
   try {
-
     const { id } = req.params;
-
-    if (!id) {
-      return res.status(400).json({
-        success: false,
-        message: "Expense ID is required",
-      });
-    }
 
     await Expense.findByIdAndDelete(id);
 
@@ -93,11 +78,9 @@ export const deleteExpense = async (req, res) => {
     });
 
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
