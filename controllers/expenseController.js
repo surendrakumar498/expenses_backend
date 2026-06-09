@@ -47,7 +47,7 @@ export const createExpense = async (req, res) => {
 
 export const getExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find().sort({
+    const expenses = await Expense.find({}).sort({
       createdAt: -1,
     });
 
