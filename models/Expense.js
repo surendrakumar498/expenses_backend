@@ -26,6 +26,10 @@ const expenseSchema = new mongoose.Schema({
     type: String,
   },
 
+  public_id: {
+    type: String,
+  },
+
 }, { timestamps: true });
 
 export default mongoose.model("Expense", expenseSchema);

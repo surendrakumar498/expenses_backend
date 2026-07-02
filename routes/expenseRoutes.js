@@ -5,13 +5,13 @@ import path from "path";
 import {
   createExpense,
   getExpenses,
+  updateExpense,
   deleteExpense,
 } from "../controllers/expenseController.js";
 
 const router = express.Router();
 
-
-//  MULTER STORAGE 
+//  MULTER STORAGE
 
 import cloudinary from "../config/cloudinaryConfig.js";
 
@@ -27,9 +27,7 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-
-
-// CREATE 
+// CREATE
 
 router.post(
   "/create",
@@ -42,12 +40,18 @@ router.get(
   getExpenses
 );
 
+// UPDATE
+
+router.put(
+  "/update/:id",
+  upload.single("file"),
+  updateExpense
+);
 
 router.delete(
   "/delete/:id",
   deleteExpense
 );
-
 
 // DOWNLOAD FILE
 
