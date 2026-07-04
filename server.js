@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import expenseRoutes from "./routes/expenseRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.get("/", (req, res) => {
 
 // API Routes
 app.use("/api/expenses", expenseRoutes);
+app.use("/api/auth", authRoutes);
 
 // MongoDB Connection
 mongoose
