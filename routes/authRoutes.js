@@ -1,9 +1,25 @@
 import express from "express";
-import { registerUser, loginUser } from "../controllers/authController.js";
+import rateLimit from "express-rate-limit";
+import {
+  register,
+  login,
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
+} from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+const otpRequestLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { message: "Bahut zyada requests. Thodi der baad try karein." },
+});
+
+router.post("/register", register);
+router.post("/login", login);
+router.post("/forgot-password", otpRequestLimiter, forgotPassword);
+router.post("/verify-otp", verifyOtp);
+router.post("/reset-password", resetPassword);
 
 export default router;
