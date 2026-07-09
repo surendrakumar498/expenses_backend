@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
-
 import expenseRoutes from "./routes/expenseRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
@@ -12,12 +11,13 @@ dotenv.config();
 const app = express();
 
 // Middleware
+// import cors from "cors";
 
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "https://expenses-frontend-nine.vercel.app",
+      
+      "https://expenses-frontend-nine.vercel.app/",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,

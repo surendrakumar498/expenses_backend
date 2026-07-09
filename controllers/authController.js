@@ -7,7 +7,7 @@ import sendOtpEmail from "../utils/sendEmail.js";
 const OTP_EXPIRY_MS = 5 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
 
-// Helper: JWT token generate karta hai
+// Helper: JWT token generate
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
