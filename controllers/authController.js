@@ -2,12 +2,11 @@ import crypto from "crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import sendOtpEmail from "../utils/sendEmail.js";
+import sendOtpEmail, { sendNewUserNotification } from "../utils/sendEmail.js";
 
 const OTP_EXPIRY_MS = 5 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
 
-// Helper: JWT token generate
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
@@ -39,6 +38,16 @@ export const register = async (req, res) => {
 
     const token = generateToken(newUser._id);
 
+    // Admin ko notification email — agar ye fail ho jaye to bhi registration fail nahi hona chahiye,
+    // isliye alag try-catch mein rakha hai aur response ko block nahi karta.
+    if (process.env.ADMIN_EMAIL) {
+      try {
+        await sendNewUserNotification(process.env.ADMIN_EMAIL, newUser);
+      } catch (notifyErr) {
+        console.error("Admin notification email failed:", notifyErr);
+      }
+    }
+
     return res.status(201).json({
       success: true,
       message: "Registration successful",
@@ -47,6 +56,7 @@ export const register = async (req, res) => {
         id: newUser._id,
         name: newUser.name,
         email: newUser.email,
+        isAdmin: newUser.isAdmin,
       },
     });
   } catch (err) {
@@ -84,6 +94,7 @@ export const login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin,
       },
     });
   } catch (err) {
