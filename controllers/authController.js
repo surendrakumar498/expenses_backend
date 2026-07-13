@@ -7,6 +7,10 @@ import sendOtpEmail, { sendNewUserNotification } from "../utils/sendEmail.js";
 const OTP_EXPIRY_MS = 5 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
 
+const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+const PASSWORD_ERROR_MESSAGE =
+  "Password must be at least 8 characters long and include both letters and numbers.";
+
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
@@ -17,15 +21,16 @@ export const register = async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ success: false, message: "Name, email aur password required hain." });
+      return res.status(400).json({ success: false, message: "Name, email, and password are required." });
     }
-    if (password.length < 8) {
-      return res.status(400).json({ success: false, message: "Password kam se kam 8 characters ka hona chahiye." });
+
+    if (!PASSWORD_REGEX.test(password)) {
+      return res.status(400).json({ success: false, message: PASSWORD_ERROR_MESSAGE });
     }
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
-      return res.status(409).json({ success: false, message: "Ye email pehle se registered hai." });
+      return res.status(409).json({ success: false, message: "This email is already registered." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -38,8 +43,6 @@ export const register = async (req, res) => {
 
     const token = generateToken(newUser._id);
 
-    // Admin ko notification email — agar ye fail ho jaye to bhi registration fail nahi hona chahiye,
-    // isliye alag try-catch mein rakha hai aur response ko block nahi karta.
     if (process.env.ADMIN_EMAIL) {
       try {
         await sendNewUserNotification(process.env.ADMIN_EMAIL, newUser);
@@ -128,7 +131,7 @@ export const forgotPassword = async (req, res) => {
     return res.status(200).json({ message: "If this email is registered, an OTP has been sent to your email." });
   } catch (err) {
     console.error("forgotPassword error:", err);
-    return res.status(500).json({ message: "Something went wrong. Please try again." });
+    return res.status(500).json({ message: "This email are not register." });
   }
 };
 
@@ -176,8 +179,9 @@ export const resetPassword = async (req, res) => {
     if (!email || !newPassword) {
       return res.status(400).json({ message: "Email and new password are required." });
     }
-    if (newPassword.length < 8) {
-      return res.status(400).json({ message: "Password must be at least 8 characters long." });
+
+    if (!PASSWORD_REGEX.test(newPassword)) {
+      return res.status(400).json({ message: PASSWORD_ERROR_MESSAGE });
     }
 
     const user = await User.findOne({ email: email.toLowerCase() });

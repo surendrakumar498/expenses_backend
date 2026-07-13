@@ -18,17 +18,16 @@ export const deleteUser = async (req, res) => {
 
     const userToDelete = await User.findById(id);
     if (!userToDelete) {
-      return res.status(404).json({ success: false, message: "User nahi mila." });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Safety: admin khud ko ya kisi doosre admin ko delete na kar sake
     if (userToDelete.isAdmin) {
-      return res.status(403).json({ success: false, message: "Admin account delete nahi kiya ja sakta." });
+      return res.status(403).json({ success: false, message: "Admin account cannot be deleted." });
     }
 
     await User.findByIdAndDelete(id);
 
-    return res.status(200).json({ success: true, message: "User delete ho gaya." });
+    return res.status(200).json({ success: true, message: "User deleted successfully." });
   } catch (err) {
     console.error("deleteUser error:", err);
     return res.status(500).json({ success: false, message: "Something went wrong." });

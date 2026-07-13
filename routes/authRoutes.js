@@ -13,7 +13,7 @@ const router = express.Router();
 const otpRequestLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
-  message: { message: "Bahut zyada requests. Thodi der baad try karein." },
+  message: { message: "Too many requests. Please try again later." },
 });
 
 router.post("/register", register);

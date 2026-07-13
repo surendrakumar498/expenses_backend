@@ -1,22 +1,3 @@
-// import { Resend } from "resend";
-
-// const resend = new Resend(process.env.RESEND_API_KEY);
-
-// async function sendOtpEmail(toEmail, otp) {
-//   await resend.emails.send({
-//     from: "onboarding@resend.dev", // testing ke liye ye default domain use karo
-//     to: toEmail,
-//     subject: "Your Password Reset OTP",
-//     html: `
-//       <div style="font-family: Arial, sans-serif; max-width: 480px; margin: auto;">
-//         <h2>Password Reset Request</h2>
-//         <p>Aapka OTP hai:</p>
-//         <h1 style="letter-spacing: 4px;">${otp}</h1>
-//         <p>Ye OTP <b>5 minute</b> ke liye valid hai. Agar aapne ye request nahi ki, is email ko ignore kar dijiye.</p>
-//       </div>
-//     `,
-//   });
-// }
 
 // export default sendOtpEmail;
 import nodemailer from "nodemailer";
@@ -88,7 +69,7 @@ function emailShell({ preheader = "", bodyHtml = "" }) {
               <tr>
                 <td style="background: linear-gradient(135deg, #4a3aff, #6c5ce7); padding: 28px 32px;">
                   <span style="color:#ffffff; font-size: 20px; font-weight: 700; letter-spacing: 0.3px;">
-                    💰 Finance Tracker
+                     Finance Tracker
                   </span>
                 </td>
               </tr>

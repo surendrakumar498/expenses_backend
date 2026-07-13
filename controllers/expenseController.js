@@ -25,8 +25,8 @@ export const createExpense = async (req, res) => {
       amount,
       time,
       date,
-      file: req.file.path, // Cloudinary URL
-      public_id: req.file.filename, // Cloudinary public_id (update ke time delete ke liye zaroori)
+      file: req.file.path,
+      public_id: req.file.filename, 
     });
 
     res.status(201).json({
